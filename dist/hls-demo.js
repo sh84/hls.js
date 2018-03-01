@@ -7,7 +7,7 @@
 		exports["HlsDemo"] = factory();
 	else
 		root["HlsDemo"] = factory();
-})(typeof self !== 'undefined' ? self : this, function() {
+})(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -1209,6 +1209,15 @@ function arrayConcat(inputArray) {
 /* 1 */
 /***/ (function(module, exports) {
 
+/**
+ * Create test stream
+ * @param {string} url
+ * @param {string} description
+ * @param {boolean} [live]
+ * @param {boolean} [abr]
+ * @param {string[]} [blacklist_ua]
+ * @returns {{url: string, description: string, live: boolean, abr: boolean, blacklist_ua: string[]}}
+ */
 function createTestStream(url, description) {
   var live = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
   var abr = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
@@ -1223,8 +1232,8 @@ function createTestStream(url, description) {
   };
 }
 
-function createTestStreamWithConfig(url, description, config) {
-  var testStream = createTestStream(url, description);
+function createTestStreamWithConfig(target, config) {
+  var testStream = createTestStream(target.url, target.description, target.live, target.abr, target.blacklist_ua);
 
   testStream.config = config;
 
@@ -1320,7 +1329,11 @@ module.exports = {
     "abr": false
   },
   uspHLSAteam: createTestStream("http://demo.unified-streaming.com/video/ateam/ateam.ism/ateam.m3u8?session_id=27199", "A-Team movie trailer - HLS by Unified Streaming Platform"),
-  angelOneShakaWidevine: createTestStreamWithConfig("https://storage.googleapis.com/shaka-demo-assets/angel-one-widevine-hls/hls.m3u8", "Shaka-packager Widevine DRM (EME) HLS-fMP4 - Angel One Demo", {
+  angelOneShakaWidevine: createTestStreamWithConfig({
+    url: "https://storage.googleapis.com/shaka-demo-assets/angel-one-widevine-hls/hls.m3u8",
+    description: "Shaka-packager Widevine DRM (EME) HLS-fMP4 - Angel One Demo",
+    blacklist_ua: ["firefox"]
+  }, {
     widevineLicenseUrl: "https://cwip-shaka-proxy.appspot.com/no_auth",
     emeEnabled: true
   })
